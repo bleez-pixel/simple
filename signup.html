@@ -209,20 +209,20 @@
     <div class="logo">My Bot System</div>
 
     <h1>Create Account</h1>
-    <p class="subtitle">Sign up karo, bot se baat karo.</p>
+    <p class="subtitle">Sign up </p>
 
-    <!-- Error/Success message box — JS isko dikhayega/chupayega -->
+    <!-- Error/Success message box — JS keep Hide-->
     <div class="message" id="msgBox"></div>
 
     <!-- ===== Signup Form ===== -->
     <div class="field">
       <label>Full Name</label>
-      <input type="text" id="nameInput" placeholder="Ali Hassan" />
+      <input type="text" id="nameInput" placeholder="Alex" />
     </div>
 
     <div class="field">
       <label>Email</label>
-      <input type="email" id="emailInput" placeholder="ali@example.com" />
+      <input type="email" id="emailInput" placeholder="alex@example.com" />
     </div>
 
     <div class="field">
@@ -235,7 +235,7 @@
     </button>
 
     <div class="footer-text">
-      Pehle se account hai? <a href="login.html">Login karo</a>
+      already have account? <a href="login.html">Login </a>
     </div>
   </div>
 
@@ -273,12 +273,12 @@
 
       // --- Validation: Khali fields check karo ---
       if (!name || !email || !pass) {
-        showMsg('Sab fields bharo please.', 'error');
+        showMsg('Please fill in all fields.', 'error');
         return;
       }
 
       if (pass.length < 6) {
-        showMsg('Password kam az kam 6 characters ka hona chahiye.', 'error');
+        showMsg('The password must be at least 6 characters long.', 'error');
         return;
       }
 
@@ -307,13 +307,13 @@
 
         if (dbError) throw dbError;
 
-        // STEP 3: Success! Login page par bhejo
-        showMsg('Account ban gaya! Login page par ja rahe hain...', 'success');
+        // STEP 3: Success! Move to Login page
+        showMsg('Account is created! Going to the login page...', 'success');
         setTimeout(() => window.location.href = 'login.html', 1500);
 
       } catch (err) {
         // Agar koi bhi error aaya — user ko dikhao
-        showMsg(err.message || 'Kuch galat hua, dobara try karo.', 'error');
+        showMsg(err.message || 'Something went wrong, try again.', 'error');
         btn.disabled = false;
         btn.textContent = 'CREATE ACCOUNT →';
       }
