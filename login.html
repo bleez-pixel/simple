@@ -181,7 +181,7 @@
   <div class="card">
     <div class="logo">My Bot System</div>
     <h1>Welcome Back</h1>
-    <p class="subtitle">Login karo, bot tumhara intezaar kar raha hai.</p>
+    <p class="subtitle">Log in, the bot is waiting for you.</p>
 
     <div class="message" id="msgBox"></div>
 
@@ -200,7 +200,7 @@
     </button>
 
     <div class="footer-text">
-      Naya hain? <a href="signup.html">Account banao</a>
+      New user? <a href="signup.html">Create Account</a>
     </div>
   </div>
 
@@ -241,7 +241,7 @@
       const btn   = document.getElementById('loginBtn');
 
       if (!email || !pass) {
-        showMsg('Email aur password dono bharo.', 'error');
+        showMsg('Fill in both email and password.', 'error');
         return;
       }
 
@@ -271,11 +271,11 @@
         localStorage.setItem('sb_user', JSON.stringify(userData));
 
         // STEP 4: Home page par bhejo
-        showMsg('Login ho gaya! Ghar ja rahe hain...', 'success');
+        showMsg('Logged in! Going homepage...', 'success');
         setTimeout(() => window.location.href = 'index.html', 1000);
 
       } catch (err) {
-        showMsg(err.message || 'Email ya password galat hai.', 'error');
+        showMsg(err.message || 'Email passward is wrong.', 'error');
         btn.disabled = false;
         btn.textContent = 'LOGIN →';
       }
