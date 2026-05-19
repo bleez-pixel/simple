@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up — My Bot</title>
+
+  <!-- Google Fonts: Distinctive pairing -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <!-- Supabase SDK — CDN se load ho raha hai -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ===== CSS Variables — poori website ka color theme ===== */
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --accent: #4ade80;       /* green — bot online color se match */
+      --accent-dim: #166534;
+      --text: #e0e0e0;
+      --text-muted: #666;
+      --error: #f87171;
+      --font-mono: 'Space Mono', monospace;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      color: var(--text);
+      /* Background mein subtle grid pattern */
+      background-image: 
+        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ===== Main Card ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      margin: 1rem;
+      /* Entry animation */
+      animation: slideUp 0.4s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Header ===== */
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    /* ===== Form Fields ===== */
+    .field {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    /* Focus hone par green border aa jaye */
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    /* ===== Submit Button ===== */
+    .btn {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 0.875rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn:active { transform: scale(0.98); }
+
+    /* Loading state — spinner dikhao */
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ===== Error / Success Messages ===== */
+    .message {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none; /* Default hidden — JS se dikhayenge */
+    }
+
+    .message.error {
+      background: rgba(248,113,113,0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+      display: block;
+    }
+
+    .message.success {
+      background: rgba(74,222,128,0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      display: block;
+    }
+
+    /* ===== Footer Link ===== */
+    .footer-text {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-text a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Logo / Brand -->
+    <div class="logo">My Bot System</div>
+
+    <h1>Create Account</h1>
+    <p class="subtitle">Sign up karo, bot se baat karo.</p>
+
+    <!-- Error/Success message box — JS isko dikhayega/chupayega -->
+    <div class="message" id="msgBox"></div>
+
+    <!-- ===== Signup Form ===== -->
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="nameInput" placeholder="Ali Hassan" />
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="emailInput" placeholder="ali@example.com" />
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="passInput" placeholder="Min 6 characters" />
+    </div>
+
+    <button class="btn" id="signupBtn" onclick="handleSignup()">
+      CREATE ACCOUNT →
+    </button>
+
+    <div class="footer-text">
+      Pehle se account hai? <a href="login.html">Login karo</a>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // SUPABASE SETUP
+    // Yahan apna Project URL aur Anon Key daalo
+    // Supabase Dashboard → Settings → API mein milega
+    // ============================================================
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';       // ← Replace karo
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // ← Replace karo
+
+    // Supabase client banao — ab hum is se saari calls karenge
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ============================================================
+    // MESSAGE DIKHANE KA FUNCTION
+    // type = 'error' ya 'success'
+    // ============================================================
+    function showMsg(text, type) {
+      const box = document.getElementById('msgBox');
+      box.className = `message ${type}`; // CSS class lagao
+      box.textContent = text;
+    }
+
+    // ============================================================
+    // MAIN SIGNUP FUNCTION — Button click par chalta hai
+    // ============================================================
+    async function handleSignup() {
+      const name  = document.getElementById('nameInput').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const pass  = document.getElementById('passInput').value;
+      const btn   = document.getElementById('signupBtn');
+
+      // --- Validation: Khali fields check karo ---
+      if (!name || !email || !pass) {
+        showMsg('Sab fields bharo please.', 'error');
+        return;
+      }
+
+      if (pass.length < 6) {
+        showMsg('Password kam az kam 6 characters ka hona chahiye.', 'error');
+        return;
+      }
+
+      // --- Loading state: Button disable karo ---
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        // STEP 1: Supabase Auth mein user register karo
+        // Yeh email+password Supabase ke auth system mein save karta hai
+        const { data, error } = await sb.auth.signUp({ email, password: pass });
+
+        if (error) throw error; // Agar error aaya to catch mein jao
+
+        // STEP 2: Users table mein extra info save karo
+        // auth.signUp sirf email/password save karta hai
+        // Naam, plan, status — yeh hum khud insert karte hain
+        const { error: dbError } = await sb.from('users').insert({
+          id: data.user.id,            // Supabase Auth ka same ID use karo
+          email: email,
+          name: name,
+          plan: 'free',                // Default plan — free
+          status: 'active',            // Default status — active
+          registered_at: new Date().toISOString() // Aaj ki date — trial count ke liye
+        });
+
+        if (dbError) throw dbError;
+
+        // STEP 3: Success! Login page par bhejo
+        showMsg('Account ban gaya! Login page par ja rahe hain...', 'success');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+
+      } catch (err) {
+        // Agar koi bhi error aaya — user ko dikhao
+        showMsg(err.message || 'Kuch galat hua, dobara try karo.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'CREATE ACCOUNT →';
+      }
+    }
+  </script>
+
+</body>
+</html>
