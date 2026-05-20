@@ -181,13 +181,13 @@
   <div class="card">
     <div class="logo">My Bot System</div>
     <h1>Welcome Back</h1>
-    <p class="subtitle">Login karo, bot tumhara intezaar kar raha hai.</p>
+    <p class="subtitle">Log in, your bot is waiting for you.</p>
 
     <div class="message" id="msgBox"></div>
 
     <div class="field">
       <label>Email</label>
-      <input type="email" id="emailInput" placeholder="ali@example.com" />
+      <input type="email" id="emailInput" placeholder="alex@example.com" />
     </div>
 
     <div class="field">
@@ -200,28 +200,28 @@
     </button>
 
     <div class="footer-text">
-      Naya hain? <a href="signup.html">Account banao</a>
+      New here? <a href="signup.html">Create an account</a>
     </div>
   </div>
 
   <script>
     // ============================================================
-    // SUPABASE SETUP — signup.html wala hi URL aur Key daalo
+    // SUPABASE SETUP — Use the same URL and Key as signup.html
     // ============================================================
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA';
 
     const { createClient } = supabase;
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ============================================================
-    // PAGE LOAD PAR CHECK — Agar pehle se logged in hai
-    // To seedha index.html par bhejo, login ki zarurat nahi
+    // CHECK ON PAGE LOAD — If already logged in, redirect directly
+    // to index.html, no need to log in again.
     // ============================================================
     window.addEventListener('load', async () => {
       const { data } = await sb.auth.getSession();
       if (data.session) {
-        // Pehle se session hai — ghar wapas jao
+        // Already logged in — redirect to home page
         window.location.href = 'index.html';
       }
     });
@@ -241,7 +241,7 @@
       const btn   = document.getElementById('loginBtn');
 
       if (!email || !pass) {
-        showMsg('Email aur password dono bharo.', 'error');
+        showMsg('Please fill in both email and password.', 'error');
         return;
       }
 
@@ -249,33 +249,33 @@
       btn.textContent = 'Logging in...';
 
       try {
-        // STEP 1: Supabase se login karo
+        // STEP 1: Log in with Supabase
         const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
 
         if (error) throw error;
 
-        // STEP 2: JWT Token milega — isko localStorage mein save karo
-        // Yeh token Botpress ko bhejna hai ta ke wo user pehchane
+        // STEP 2: Get JWT Token and save it in localStorage
+        // This token is sent to Botpress so it can identify the user
         const token = data.session.access_token;
         localStorage.setItem('sb_token', token);
 
-        // STEP 3: User ka plan bhi localStorage mein save karo
-        // Index.html par kaam aayega — plans button dikhane ke liye
+        // STEP 3: Save user's plan in localStorage
+        // Used in index.html to control plans and display details
         const { data: userData } = await sb
           .from('users')
           .select('name, plan, status, addon_messages')
           .eq('id', data.user.id)
           .single();
 
-        // User info save karo
+        // Save user info
         localStorage.setItem('sb_user', JSON.stringify(userData));
 
-        // STEP 4: Home page par bhejo
-        showMsg('Login ho gaya! Ghar ja rahe hain...', 'success');
+        // STEP 4: Redirect to home page
+        showMsg('Logged in successfully! Redirecting to home page...', 'success');
         setTimeout(() => window.location.href = 'index.html', 1000);
 
       } catch (err) {
-        showMsg(err.message || 'Email ya password galat hai.', 'error');
+        showMsg(err.message || 'Incorrect email or password.', 'error');
         btn.disabled = false;
         btn.textContent = 'LOGIN →';
       }

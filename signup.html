@@ -8,16 +8,16 @@
   <!-- Google Fonts: Distinctive pairing -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 
-  <!-- Supabase SDK — CDN se load ho raha hai -->
+  <!-- Supabase SDK — Loaded from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    /* ===== CSS Variables — poori website ka color theme ===== */
+    /* ===== CSS Variables — Color theme of the website ===== */
     :root {
       --bg: #0a0a0a;
       --surface: #141414;
       --border: #2a2a2a;
-      --accent: #4ade80;       /* green — bot online color se match */
+      --accent: #4ade80;       /* green — Matches the bot's online status color */
       --accent-dim: #166534;
       --text: #e0e0e0;
       --text-muted: #666;
@@ -36,7 +36,7 @@
       justify-content: center;
       font-family: var(--font-body);
       color: var(--text);
-      /* Background mein subtle grid pattern */
+      /* Subtle grid pattern in background */
       background-image: 
         linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
@@ -130,7 +130,7 @@
       transition: border-color 0.2s;
     }
 
-    /* Focus hone par green border aa jaye */
+    /* Green border on focus */
     input:focus {
       border-color: var(--accent);
     }
@@ -155,7 +155,7 @@
     .btn:hover { opacity: 0.9; }
     .btn:active { transform: scale(0.98); }
 
-    /* Loading state — spinner dikhao */
+    /* Loading state */
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -167,7 +167,7 @@
       border-radius: 8px;
       font-size: 0.85rem;
       margin-bottom: 1rem;
-      display: none; /* Default hidden — JS se dikhayenge */
+      display: none; /* Default hidden — shown via JS */
     }
 
     .message.error {
@@ -209,20 +209,20 @@
     <div class="logo">My Bot System</div>
 
     <h1>Create Account</h1>
-    <p class="subtitle">Sign up karo, bot se baat karo.</p>
+    <p class="subtitle">Sign up now to start chatting with the bot.</p>
 
-    <!-- Error/Success message box — JS isko dikhayega/chupayega -->
+    <!-- Error/Success message box — Shown/Hidden via JS -->
     <div class="message" id="msgBox"></div>
 
     <!-- ===== Signup Form ===== -->
     <div class="field">
       <label>Full Name</label>
-      <input type="text" id="nameInput" placeholder="Ali Hassan" />
+      <input type="text" id="nameInput" placeholder="Alex Hassan" />
     </div>
 
     <div class="field">
       <label>Email</label>
-      <input type="email" id="emailInput" placeholder="ali@example.com" />
+      <input type="email" id="emailInput" placeholder="alex@example.com" />
     </div>
 
     <div class="field">
@@ -235,35 +235,35 @@
     </button>
 
     <div class="footer-text">
-      Pehle se account hai? <a href="login.html">Login karo</a>
+      Already have an account? <a href="login.html">Login</a>
     </div>
   </div>
 
   <script>
     // ============================================================
     // SUPABASE SETUP
-    // Yahan apna Project URL aur Anon Key daalo
-    // Supabase Dashboard → Settings → API mein milega
+    // Enter your Project URL and Anon Key here
+    // Can be found in Supabase Dashboard → Settings → API
     // ============================================================
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';       // ← Replace karo
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // ← Replace karo
+    const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';       // ← Replace this
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA'; // ← Replace this
 
-    // Supabase client banao — ab hum is se saari calls karenge
+    // Create Supabase client — we will make all calls using this
     const { createClient } = supabase;
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ============================================================
-    // MESSAGE DIKHANE KA FUNCTION
-    // type = 'error' ya 'success'
+    // FUNCTION TO DISPLAY MESSAGES
+    // type = 'error' or 'success'
     // ============================================================
     function showMsg(text, type) {
       const box = document.getElementById('msgBox');
-      box.className = `message ${type}`; // CSS class lagao
+      box.className = `message ${type}`; // Set CSS class
       box.textContent = text;
     }
 
     // ============================================================
-    // MAIN SIGNUP FUNCTION — Button click par chalta hai
+    // MAIN SIGNUP FUNCTION — Triggered on button click
     // ============================================================
     async function handleSignup() {
       const name  = document.getElementById('nameInput').value.trim();
@@ -271,49 +271,49 @@
       const pass  = document.getElementById('passInput').value;
       const btn   = document.getElementById('signupBtn');
 
-      // --- Validation: Khali fields check karo ---
+      // --- Validation: Check for empty fields ---
       if (!name || !email || !pass) {
-        showMsg('Sab fields bharo please.', 'error');
+        showMsg('Please fill in all fields.', 'error');
         return;
       }
 
       if (pass.length < 6) {
-        showMsg('Password kam az kam 6 characters ka hona chahiye.', 'error');
+        showMsg('Password must be at least 6 characters long.', 'error');
         return;
       }
 
-      // --- Loading state: Button disable karo ---
+      // --- Loading state: Disable the button ---
       btn.disabled = true;
       btn.textContent = 'Creating...';
 
       try {
-        // STEP 1: Supabase Auth mein user register karo
-        // Yeh email+password Supabase ke auth system mein save karta hai
+        // STEP 1: Register user in Supabase Auth
+        // Saves the email and password in Supabase's authentication system
         const { data, error } = await sb.auth.signUp({ email, password: pass });
 
-        if (error) throw error; // Agar error aaya to catch mein jao
+        if (error) throw error; // If an error occurs, go to catch block
 
-        // STEP 2: Users table mein extra info save karo
-        // auth.signUp sirf email/password save karta hai
-        // Naam, plan, status — yeh hum khud insert karte hain
+        // STEP 2: Save extra info in users table
+        // auth.signUp only saves email/password
+        // Name, plan, and status are inserted manually
         const { error: dbError } = await sb.from('users').insert({
-          id: data.user.id,            // Supabase Auth ka same ID use karo
+          id: data.user.id,            // Use the same ID from Supabase Auth
           email: email,
           name: name,
           plan: 'free',                // Default plan — free
           status: 'active',            // Default status — active
-          registered_at: new Date().toISOString() // Aaj ki date — trial count ke liye
+          registered_at: new Date().toISOString() // Current date — for trial duration tracking
         });
 
         if (dbError) throw dbError;
 
-        // STEP 3: Success! Login page par bhejo
-        showMsg('Account ban gaya! Login page par ja rahe hain...', 'success');
+        // STEP 3: Success! Redirect to login page
+        showMsg('Account created successfully! Redirecting to login page...', 'success');
         setTimeout(() => window.location.href = 'login.html', 1500);
 
       } catch (err) {
-        // Agar koi bhi error aaya — user ko dikhao
-        showMsg(err.message || 'Kuch galat hua, dobara try karo.', 'error');
+        // Display any errors to the user
+        showMsg(err.message || 'Something went wrong, please try again.', 'error');
         btn.disabled = false;
         btn.textContent = 'CREATE ACCOUNT →';
       }

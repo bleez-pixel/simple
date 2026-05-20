@@ -38,9 +38,9 @@
     }
 
     /* ===== TOP NAVBAR ===== */
-    /* Sirf logged-in users ko dikhega — JS se control hoga */
+    /* Only visible to logged-in users — controlled via JS */
     .navbar {
-      display: none; /* Default hidden — JS dikhayega */
+      display: none; /* Default hidden — shown via JS */
       align-items: center;
       justify-content: space-between;
       padding: 1rem 2rem;
@@ -75,13 +75,13 @@
       gap: 1rem;
     }
 
-    /* User ka naam navbar mein */
+    /* User's name in navbar */
     .nav-user {
       font-size: 0.85rem;
       color: var(--text-muted);
     }
 
-    /* Plans button — navbar mein */
+    /* Plans button — in navbar */
     .nav-btn {
       font-family: var(--font-mono);
       font-size: 0.75rem;
@@ -113,7 +113,7 @@
       border-color: var(--error);
     }
 
-    /* ===== MAIN CONTENT — Center mein ===== */
+    /* ===== MAIN CONTENT — Centered ===== */
     .main {
       display: flex;
       flex-direction: column;
@@ -161,9 +161,9 @@
     }
 
     /* ===== NOT LOGGED IN STATE ===== */
-    /* Agar login nahi kiya to yeh dikhega */
+    /* Shown if the user is not logged in */
     .auth-prompt {
-      display: none; /* JS control karega */
+      display: none; /* Controlled via JS */
       margin-top: 2rem;
       flex-direction: column;
       align-items: center;
@@ -207,7 +207,7 @@
     .btn-login:hover { border-color: var(--accent); color: var(--accent); }
 
     /* ===== PLANS MODAL ===== */
-    /* Yeh popup hai — Plans button click par khulega */
+    /* This is the popup — opens when the Plans button is clicked */
     .modal-overlay {
       display: none; /* Default hidden */
       position: fixed;
@@ -220,7 +220,7 @@
       padding: 1rem;
     }
 
-    /* Jab active class lage to dikhao */
+    /* Display when active class is applied */
     .modal-overlay.active {
       display: flex;
       animation: fadeIn 0.2s ease;
@@ -260,7 +260,7 @@
       letter-spacing: 0.05em;
     }
 
-    /* X button — modal band karne ke liye */
+    /* X button — to close the modal */
     .modal-close {
       background: none;
       border: none;
@@ -333,7 +333,7 @@
       display: block;
     }
 
-    /* Plan ke action buttons */
+    /* Action buttons for plans */
     .plan-actions {
       display: flex;
       gap: 0.5rem;
@@ -370,7 +370,7 @@
     .btn-cancel:hover { background: rgba(248,113,113,0.1); }
     .btn-cancel:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* Divider line modal mein */
+    /* Divider line in modal */
     .divider {
       border: none;
       border-top: 1px solid var(--border);
@@ -403,13 +403,13 @@
 </head>
 <body>
 
-  <!-- ===== NAVBAR — sirf logged in users ko dikhega ===== -->
+  <!-- ===== NAVBAR — only visible to logged-in users ===== -->
   <nav class="navbar" id="navbar">
     <div class="nav-brand">My Bot System</div>
     <div class="nav-right">
-      <!-- User ka naam yahan aayega -->
+      <!-- User's name will appear here -->
       <span class="nav-user" id="navUser"></span>
-      <!-- Plans button — click par modal khulega -->
+      <!-- Plans button — opens the modal on click -->
       <button class="nav-btn btn-plans" onclick="openPlansModal()">PLANS</button>
       <!-- Logout -->
       <button class="nav-btn btn-logout" onclick="handleLogout()">LOGOUT</button>
@@ -426,9 +426,9 @@
       Bot is online
     </div>
 
-    <!-- Agar logged in nahi — yeh dikhega, signup/login ka option -->
+    <!-- Shown if not logged in — options to sign up or log in -->
     <div class="auth-prompt" id="authPrompt">
-      <p>Bot use karne ke liye pehle login karo</p>
+      <p>Please log in to use the bot</p>
       <div class="auth-btns">
         <a href="signup.html" class="btn-auth btn-signup">SIGN UP</a>
         <a href="login.html" class="btn-auth btn-login">LOGIN</a>
@@ -445,14 +445,14 @@
         <button class="modal-close" onclick="closePlansModal()">✕</button>
       </div>
 
-      <!-- Status message — success/error dikhane ke liye -->
+      <!-- Status message — to show success/error -->
       <div class="modal-msg" id="modalMsg"></div>
 
       <!-- ===== PREMIUM PLAN CARD ===== -->
       <div class="plan-card" id="premiumCard">
         <div class="plan-header">
           <span class="plan-name">PREMIUM</span>
-          <!-- Badge JS se update karega — active ya current plan -->
+          <!-- Badge is updated via JS — active or current plan -->
           <span class="badge" id="premiumBadge"></span>
         </div>
         <div class="plan-features">
@@ -461,11 +461,11 @@
           <span>✦ Priority bot access</span>
         </div>
         <div class="plan-actions">
-          <!-- Buy button — agar free plan par hain -->
+          <!-- Buy button — shown if on the free plan -->
           <button class="action-btn btn-buy" id="premiumBuyBtn" onclick="buyPremium()">
             ACTIVATE PREMIUM
           </button>
-          <!-- Cancel button — agar premium active hai -->
+          <!-- Cancel button — shown if premium is active -->
           <button class="action-btn btn-cancel" id="premiumCancelBtn" onclick="cancelPremium()" style="display:none">
             CANCEL
           </button>
@@ -473,7 +473,7 @@
       </div>
 
       <!-- ===== 500 MESSAGES ADD-ON CARD ===== -->
-      <!-- Yeh sirf premium users ko dikhega — JS control karega -->
+      <!-- Visible only to premium users — controlled via JS -->
       <div class="plan-card" id="addonCard" style="display:none">
         <div class="plan-header">
           <span class="plan-name">500 MSG ADD-ON</span>
@@ -481,8 +481,8 @@
         </div>
         <div class="plan-features">
           <span>✦ 500 extra messages</span>
-          <span>✦ Use kabhi bhi — koi daily limit nahi</span>
-          <span>✦ Premium ke saath expire hoga</span>
+          <span>✦ Use anytime — no daily limit</span>
+          <span>✦ Expires along with the Premium plan</span>
         </div>
         <div class="plan-actions">
           <button class="action-btn btn-buy" id="addonBuyBtn" onclick="buyAddon()">
@@ -498,61 +498,61 @@
   </div>
 
   <!-- ===== BOTPRESS SCRIPTS ===== -->
-  <!-- Botpress ka inject script — yeh bot bubble banata hai -->
+  <!-- Botpress inject script — generates the bot bubble -->
   <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-  <!-- Tera specific bot ka configuration file -->
+  <!-- Configuration file for your specific bot -->
   <script src="https://files.bpcontent.cloud/2026/04/13/06/20260413063008-S4GFTVBZ.js" defer></script>
 
   <script>
     // ============================================================
     // SUPABASE SETUP
     // ============================================================
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA';
 
     const { createClient } = supabase;
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ============================================================
-    // GLOBAL STATE — current user ki info yahan store hogi
+    // GLOBAL STATE — stores information of the current user
     // ============================================================
     let currentUser = null; // Supabase auth user
-    let userProfile = null; // Hamari users table ka data
+    let userProfile = null; // Data from our users table
 
     // ============================================================
-    // PAGE LOAD — Check karo user logged in hai ya nahi
+    // PAGE LOAD — Check if the user is logged in
     // ============================================================
     window.addEventListener('load', async () => {
-      // Supabase se current session check karo
+      // Check current session from Supabase
       const { data: sessionData } = await sb.auth.getSession();
 
       if (!sessionData.session) {
-        // ---- USER LOGGED IN NAHI ----
-        // Bot bubble chupa do — sirf logged in users use kar sakte hain
+        // ---- USER NOT LOGGED IN ----
+        // Hide bot bubble — only logged-in users can use the bot
         hideBotBubble();
-        // Login/Signup prompt dikhao
+        // Show login/signup prompt
         document.getElementById('authPrompt').style.display = 'flex';
 
       } else {
-        // ---- USER LOGGED IN HAI ----
+        // ---- USER IS LOGGED IN ----
         currentUser = sessionData.session.user;
 
-        // Database se user ki profile nikalo
+        // Fetch user profile from the database
         await fetchUserProfile();
 
-        // Navbar dikhao
+        // Show navbar
         document.getElementById('navbar').style.display = 'flex';
 
-        // Navbar mein naam dikhao
+        // Show name in navbar
         document.getElementById('navUser').textContent = userProfile?.name || 'User';
 
-        // Bot ko JWT token do ta ke wo user pehchane
+        // Provide JWT token to the bot so it can identify the user
         initBotWithToken(sessionData.session.access_token);
       }
     });
 
     // ============================================================
-    // USER PROFILE FETCH — Hamari users table se data lao
+    // USER PROFILE FETCH — Fetch data from our users table
     // ============================================================
     async function fetchUserProfile() {
       const { data } = await sb
@@ -562,29 +562,29 @@
         .single();
 
       userProfile = data;
-      // localStorage bhi update karo
+      // Also update localStorage
       localStorage.setItem('sb_user', JSON.stringify(data));
     }
 
     // ============================================================
-    // BOT INITIALIZE — Token ke saath Botpress ko batao kaun hai
+    // BOT INITIALIZE — Inform Botpress of user identity with token
     // ============================================================
     function initBotWithToken(token) {
-      // Botpress ready hone par user data bhejo
+      // Send user data when Botpress is ready
       window.botpress?.on('ready', () => {
         window.botpress.updateUser({
           userData: {
-            token: token  // Yeh JWT token Botpress ke Execute Code node mein jayega
+            token: token  // This JWT token will be passed to the Botpress Execute Code node
           }
         });
       });
     }
 
     // ============================================================
-    // BOT BUBBLE CHUPAO — Logged out users ke liye
+    // HIDE BOT BUBBLE — For logged-out users
     // ============================================================
     function hideBotBubble() {
-      // Botpress bubble ko CSS se hide karo
+      // Hide Botpress bubble using CSS
       const style = document.createElement('style');
       style.textContent = `
         #bp-web-widget,
@@ -610,20 +610,20 @@
     // PLANS MODAL — OPEN / CLOSE
     // ============================================================
     function openPlansModal() {
-      // Modal kholo
+      // Open modal
       document.getElementById('plansModal').classList.add('active');
-      // Modal ka UI update karo — current plan ke hisaab se buttons dikhao
+      // Update modal UI — display buttons based on current plan
       updateModalUI();
     }
 
     function closePlansModal() {
       document.getElementById('plansModal').classList.remove('active');
-      // Message box reset karo
+      // Reset message box
       document.getElementById('modalMsg').className = 'modal-msg';
     }
 
     // ============================================================
-    // MODAL UI UPDATE — Plan ke hisaab se buttons show/hide karo
+    // MODAL UI UPDATE — Show/hide buttons based on the user's plan
     // ============================================================
     function updateModalUI() {
       if (!userProfile) return;
@@ -638,39 +638,39 @@
       const premiumCard      = document.getElementById('premiumCard');
 
       if (isPremium) {
-        // Premium active hai
+        // Premium is active
         premiumCard.classList.add('active-plan');
         premiumBadge.className = 'badge badge-active';
         premiumBadge.textContent = 'ACTIVE';
-        premiumBuyBtn.style.display  = 'none';   // Buy button chupao
-        premiumCancelBtn.style.display = 'block'; // Cancel button dikhao
+        premiumBuyBtn.style.display  = 'none';   // Hide buy button
+        premiumCancelBtn.style.display = 'block'; // Show cancel button
       } else {
-        // Free plan par hain
+        // On the free plan
         premiumCard.classList.remove('active-plan');
         premiumBadge.className = 'badge badge-current';
         premiumBadge.textContent = 'FREE PLAN';
-        premiumBuyBtn.style.display    = 'block'; // Buy button dikhao
-        premiumCancelBtn.style.display = 'none';  // Cancel chupao
+        premiumBuyBtn.style.display    = 'block'; // Show buy button
+        premiumCancelBtn.style.display = 'none';  // Hide cancel button
       }
 
-      // --- Addon Card — sirf premium users ko dikhao ---
+      // --- Addon Card — Show only to premium users ---
       const addonCard      = document.getElementById('addonCard');
       const addonBadge     = document.getElementById('addonBadge');
       const addonBuyBtn    = document.getElementById('addonBuyBtn');
       const addonCancelBtn = document.getElementById('addonCancelBtn');
 
       if (isPremium) {
-        addonCard.style.display = 'block'; // Premium hai — card dikhao
+        addonCard.style.display = 'block'; // Premium user — show card
 
         if (hasAddon) {
-          // Addon already active hai
+          // Addon is already active
           addonCard.classList.add('active-plan');
           addonBadge.className = 'badge badge-active';
           addonBadge.textContent = `${userProfile.addon_messages} LEFT`;
           addonBuyBtn.style.display    = 'none';
           addonCancelBtn.style.display = 'block';
         } else {
-          // Addon nahi liya abhi
+          // Addon not purchased yet
           addonCard.classList.remove('active-plan');
           addonBadge.className = '';
           addonBadge.textContent = '';
@@ -678,13 +678,13 @@
           addonCancelBtn.style.display = 'none';
         }
       } else {
-        // Free plan par — addon card chupao
+        // On free plan — hide addon card
         addonCard.style.display = 'none';
       }
     }
 
     // ============================================================
-    // MODAL MESSAGE DIKHAO
+    // SHOW MODAL MESSAGE
     // ============================================================
     function showModalMsg(text, type) {
       const box = document.getElementById('modalMsg');
@@ -693,7 +693,7 @@
     }
 
     // ============================================================
-    // BUY PREMIUM — Supabase mein plan update karo
+    // BUY PREMIUM — Update plan in Supabase
     // ============================================================
     async function buyPremium() {
       const btn = document.getElementById('premiumBuyBtn');
@@ -701,11 +701,11 @@
       btn.textContent = 'Activating...';
 
       try {
-        // Plan expires 30 din baad
+        // Plan expires in 30 days
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 30);
 
-        // Supabase mein update karo
+        // Update in Supabase
         const { error } = await sb
           .from('users')
           .update({
@@ -716,25 +716,25 @@
 
         if (error) throw error;
 
-        // Local profile update karo — page reload ki zarurat nahi
+        // Update local profile — no need to reload the page
         userProfile.plan = 'premium';
         userProfile.plan_expires_at = expiryDate.toISOString();
 
-        showModalMsg('Premium activate ho gaya! 30 din enjoy karo.', 'success');
-        updateModalUI(); // Modal refresh karo
+        showModalMsg('Premium activated! Enjoy for 30 days.', 'success');
+        updateModalUI(); // Refresh modal
 
       } catch (err) {
-        showModalMsg('Kuch galat hua: ' + err.message, 'error');
+        showModalMsg('Something went wrong: ' + err.message, 'error');
         btn.disabled = false;
         btn.textContent = 'ACTIVATE PREMIUM';
       }
     }
 
     // ============================================================
-    // CANCEL PREMIUM — Free par wapas lao
+    // CANCEL PREMIUM — Revert back to Free plan
     // ============================================================
     async function cancelPremium() {
-      if (!confirm('Premium cancel karna chahte ho? Free plan par wapas aa jaoge.')) return;
+      if (!confirm('Do you want to cancel Premium? You will be downgraded to the Free plan.')) return;
 
       const btn = document.getElementById('premiumCancelBtn');
       btn.disabled = true;
@@ -745,7 +745,7 @@
           .update({
             plan: 'free',
             plan_expires_at: null,
-            // Addon bhi reset — premium ke bina addon kaam nahi karta
+            // Reset addon as well — addon does not work without premium
             addon_messages: 0,
             addon_expires_at: null
           })
@@ -759,17 +759,17 @@
         userProfile.addon_messages = 0;
         userProfile.addon_expires_at = null;
 
-        showModalMsg('Plan cancel ho gaya. Free plan par wapas aa gaye.', 'success');
+        showModalMsg('Plan cancelled. Downgraded back to the Free plan.', 'success');
         updateModalUI();
 
       } catch (err) {
-        showModalMsg('Kuch galat hua: ' + err.message, 'error');
+        showModalMsg('Something went wrong: ' + err.message, 'error');
         btn.disabled = false;
       }
     }
 
     // ============================================================
-    // BUY ADDON — 500 messages add karo
+    // BUY ADDON — Add 500 messages
     // ============================================================
     async function buyAddon() {
       const btn = document.getElementById('addonBuyBtn');
@@ -777,7 +777,7 @@
       btn.textContent = 'Adding...';
 
       try {
-        // Addon bhi 30 din mein expire — premium ke saath
+        // Addon also expires in 30 days — matches the premium plan expiry
         const expiryDate = new Date(userProfile.plan_expires_at);
 
         const { error } = await sb
@@ -794,21 +794,21 @@
         userProfile.addon_messages = 500;
         userProfile.addon_expires_at = expiryDate.toISOString();
 
-        showModalMsg('500 messages add ho gaye! Maza lo.', 'success');
+        showModalMsg('500 messages added successfully! Enjoy.', 'success');
         updateModalUI();
 
       } catch (err) {
-        showModalMsg('Kuch galat hua: ' + err.message, 'error');
+        showModalMsg('Something went wrong: ' + err.message, 'error');
         btn.disabled = false;
         btn.textContent = 'GET 500 MESSAGES';
       }
     }
 
     // ============================================================
-    // CANCEL ADDON — 500 messages wapas le lo
+    // CANCEL ADDON — Remove the 500 messages add-on
     // ============================================================
     async function cancelAddon() {
-      if (!confirm('500 messages add-on cancel karna chahte ho?')) return;
+      if (!confirm('Do you want to cancel the 500 messages add-on?')) return;
 
       const btn = document.getElementById('addonCancelBtn');
       btn.disabled = true;
@@ -828,20 +828,20 @@
         userProfile.addon_messages = 0;
         userProfile.addon_expires_at = null;
 
-        showModalMsg('Add-on cancel ho gaya. 20/day limit wapas.', 'success');
+        showModalMsg('Add-on cancelled. Reverted to 20/day limit.', 'success');
         updateModalUI();
 
       } catch (err) {
-        showModalMsg('Kuch galat hua: ' + err.message, 'error');
+        showModalMsg('Something went wrong: ' + err.message, 'error');
         btn.disabled = false;
       }
     }
 
     // ============================================================
-    // MODAL CLOSE — Overlay click par bhi band ho
+    // MODAL CLOSE — Close on overlay click as well
     // ============================================================
     document.getElementById('plansModal').addEventListener('click', function(e) {
-      // Sirf overlay click par band karo — modal ke andar click par nahi
+      // Only close when clicking on the overlay itself, not inside the modal
       if (e.target === this) closePlansModal();
     });
   </script>
