@@ -293,6 +293,12 @@
 
         if (error) throw error; // If an error occurs, go to catch block
 
+        // Safety Check: If email confirmation/enumeration protection is active and user exists, 
+        // Supabase returns a success response with a null user.
+        if (!data || !data.user) {
+          throw new Error('This email might already be registered. Please try logging in or use a different email.');
+        }
+
         // STEP 2: Save extra info in users table
         // auth.signUp only saves email/password
         // Name, plan, and status are inserted manually
