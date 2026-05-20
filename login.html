@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — My Bot</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -21,7 +24,11 @@
       --font-body: 'DM Sans', sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       min-height: 100vh;
@@ -31,9 +38,9 @@
       justify-content: center;
       font-family: var(--font-body);
       color: var(--text);
-      background-image: 
-        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+      background-image:
+        linear-gradient(rgba(74, 222, 128, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 222, 128, 0.03) 1px, transparent 1px);
       background-size: 40px 40px;
     }
 
@@ -49,8 +56,15 @@
     }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .logo {
@@ -68,15 +82,23 @@
     .logo::before {
       content: '';
       display: inline-block;
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       background: var(--accent);
       border-radius: 50%;
       animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     h1 {
@@ -92,7 +114,9 @@
       margin-bottom: 2rem;
     }
 
-    .field { margin-bottom: 1.25rem; }
+    .field {
+      margin-bottom: 1.25rem;
+    }
 
     label {
       display: block;
@@ -117,7 +141,9 @@
       transition: border-color 0.2s;
     }
 
-    input:focus { border-color: var(--accent); }
+    input:focus {
+      border-color: var(--accent);
+    }
 
     .btn {
       width: 100%;
@@ -135,9 +161,18 @@
       transition: opacity 0.2s, transform 0.1s;
     }
 
-    .btn:hover { opacity: 0.9; }
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     .message {
       padding: 0.75rem 1rem;
@@ -148,14 +183,14 @@
     }
 
     .message.error {
-      background: rgba(248,113,113,0.1);
+      background: rgba(248, 113, 113, 0.1);
       border: 1px solid var(--error);
       color: var(--error);
       display: block;
     }
 
     .message.success {
-      background: rgba(74,222,128,0.1);
+      background: rgba(74, 222, 128, 0.1);
       border: 1px solid var(--accent);
       color: var(--accent);
       display: block;
@@ -173,9 +208,12 @@
       text-decoration: none;
     }
 
-    .footer-text a:hover { text-decoration: underline; }
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <body>
 
   <div class="card">
@@ -237,8 +275,8 @@
     // ============================================================
     async function handleLogin() {
       const email = document.getElementById('emailInput').value.trim();
-      const pass  = document.getElementById('passInput').value;
-      const btn   = document.getElementById('loginBtn');
+      const pass = document.getElementById('passInput').value;
+      const btn = document.getElementById('loginBtn');
 
       if (!email || !pass) {
         showMsg('Please fill in both email and password.', 'error');
@@ -271,7 +309,7 @@
         localStorage.setItem('sb_user', JSON.stringify(userData));
 
         // STEP 4: Redirect to home page
-        showMsg('Logged in successfully! Redirecting to home page...', 'success');
+        showMsg('Logged in successfull! Redirecting to home page...', 'success');
         setTimeout(() => window.location.href = 'index.html', 1000);
 
       } catch (err) {
@@ -283,4 +321,5 @@
   </script>
 
 </body>
+
 </html>

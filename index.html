@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Bot</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -24,23 +27,28 @@
       --font-body: 'DM Sans', sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       min-height: 100vh;
       background: var(--bg);
       font-family: var(--font-body);
       color: var(--text);
-      background-image: 
-        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+      background-image:
+        linear-gradient(rgba(74, 222, 128, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 222, 128, 0.03) 1px, transparent 1px);
       background-size: 40px 40px;
     }
 
     /* ===== TOP NAVBAR ===== */
     /* Only visible to logged-in users — controlled via JS */
     .navbar {
-      display: none; /* Default hidden — shown via JS */
+      display: none;
+      /* Default hidden — shown via JS */
       align-items: center;
       justify-content: space-between;
       padding: 1rem 2rem;
@@ -63,7 +71,8 @@
 
     .nav-brand::before {
       content: '';
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       background: var(--accent);
       border-radius: 50%;
       animation: pulse 1.5s infinite;
@@ -99,7 +108,9 @@
       font-weight: 700;
     }
 
-    .btn-plans:hover { opacity: 0.85; }
+    .btn-plans:hover {
+      opacity: 0.85;
+    }
 
     /* Logout button */
     .btn-logout {
@@ -149,12 +160,20 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     .dot {
-      width: 8px; height: 8px;
+      width: 8px;
+      height: 8px;
       background: var(--accent);
       border-radius: 50%;
       animation: pulse 1.5s infinite;
@@ -163,7 +182,8 @@
     /* ===== NOT LOGGED IN STATE ===== */
     /* Shown if the user is not logged in */
     .auth-prompt {
-      display: none; /* Controlled via JS */
+      display: none;
+      /* Controlled via JS */
       margin-top: 2rem;
       flex-direction: column;
       align-items: center;
@@ -204,15 +224,19 @@
       border: 1px solid var(--border);
     }
 
-    .btn-login:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-login:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
 
     /* ===== PLANS MODAL ===== */
     /* This is the popup — opens when the Plans button is clicked */
     .modal-overlay {
-      display: none; /* Default hidden */
+      display: none;
+      /* Default hidden */
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(4px);
       z-index: 1000;
       align-items: center;
@@ -227,8 +251,13 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .modal {
@@ -242,8 +271,15 @@
     }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .modal-header {
@@ -271,7 +307,9 @@
       line-height: 1;
     }
 
-    .modal-close:hover { color: #fff; }
+    .modal-close:hover {
+      color: #fff;
+    }
 
     /* ===== PLAN CARDS ===== */
     .plan-card {
@@ -311,13 +349,13 @@
     }
 
     .badge-active {
-      background: rgba(74,222,128,0.15);
+      background: rgba(74, 222, 128, 0.15);
       color: var(--accent);
       border: 1px solid var(--accent-dim);
     }
 
     .badge-current {
-      background: rgba(251,191,36,0.15);
+      background: rgba(251, 191, 36, 0.15);
       color: var(--warning);
       border: 1px solid var(--warning);
     }
@@ -357,8 +395,14 @@
       color: #000;
     }
 
-    .btn-buy:hover { opacity: 0.85; }
-    .btn-buy:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-buy:hover {
+      opacity: 0.85;
+    }
+
+    .btn-buy:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
     .btn-cancel {
       background: transparent;
@@ -367,8 +411,14 @@
       border: none;
     }
 
-    .btn-cancel:hover { background: rgba(248,113,113,0.1); }
-    .btn-cancel:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-cancel:hover {
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    .btn-cancel:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
     /* Divider line in modal */
     .divider {
@@ -387,20 +437,21 @@
     }
 
     .modal-msg.error {
-      background: rgba(248,113,113,0.1);
+      background: rgba(248, 113, 113, 0.1);
       border: 1px solid var(--error);
       color: var(--error);
       display: block;
     }
 
     .modal-msg.success {
-      background: rgba(74,222,128,0.1);
+      background: rgba(74, 222, 128, 0.1);
       border: 1px solid var(--accent);
       color: var(--accent);
       display: block;
     }
   </style>
 </head>
+
 <body>
 
   <!-- ===== NAVBAR — only visible to logged-in users ===== -->
@@ -431,7 +482,7 @@
       <p>Please log in to use the bot</p>
       <div class="auth-btns">
         <a href="signup.html" class="btn-auth btn-signup">SIGN UP</a>
-        <a href="login.html" class="btn-auth btn-login">LOGIN</a>
+        <a href="login.html" class="btn-auth btn-login">LOGINS</a>
       </div>
     </div>
   </div>
@@ -505,7 +556,7 @@
 
   <script>
     // ============================================================
-    // SUPABASE SETUP
+    // SUPABASE SETUPnow is going on
     // ============================================================
     const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA';
@@ -629,34 +680,34 @@
       if (!userProfile) return;
 
       const isPremium = userProfile.plan === 'premium';
-      const hasAddon  = userProfile.addon_messages > 0;
+      const hasAddon = userProfile.addon_messages > 0;
 
       // --- Premium Card Update ---
-      const premiumBadge     = document.getElementById('premiumBadge');
-      const premiumBuyBtn    = document.getElementById('premiumBuyBtn');
+      const premiumBadge = document.getElementById('premiumBadge');
+      const premiumBuyBtn = document.getElementById('premiumBuyBtn');
       const premiumCancelBtn = document.getElementById('premiumCancelBtn');
-      const premiumCard      = document.getElementById('premiumCard');
+      const premiumCard = document.getElementById('premiumCard');
 
       if (isPremium) {
         // Premium is active
         premiumCard.classList.add('active-plan');
         premiumBadge.className = 'badge badge-active';
         premiumBadge.textContent = 'ACTIVE';
-        premiumBuyBtn.style.display  = 'none';   // Hide buy button
+        premiumBuyBtn.style.display = 'none';   // Hide buy button
         premiumCancelBtn.style.display = 'block'; // Show cancel button
       } else {
         // On the free plan
         premiumCard.classList.remove('active-plan');
         premiumBadge.className = 'badge badge-current';
         premiumBadge.textContent = 'FREE PLAN';
-        premiumBuyBtn.style.display    = 'block'; // Show buy button
+        premiumBuyBtn.style.display = 'block'; // Show buy button
         premiumCancelBtn.style.display = 'none';  // Hide cancel button
       }
 
       // --- Addon Card — Show only to premium users ---
-      const addonCard      = document.getElementById('addonCard');
-      const addonBadge     = document.getElementById('addonBadge');
-      const addonBuyBtn    = document.getElementById('addonBuyBtn');
+      const addonCard = document.getElementById('addonCard');
+      const addonBadge = document.getElementById('addonBadge');
+      const addonBuyBtn = document.getElementById('addonBuyBtn');
       const addonCancelBtn = document.getElementById('addonCancelBtn');
 
       if (isPremium) {
@@ -667,14 +718,14 @@
           addonCard.classList.add('active-plan');
           addonBadge.className = 'badge badge-active';
           addonBadge.textContent = `${userProfile.addon_messages} LEFT`;
-          addonBuyBtn.style.display    = 'none';
+          addonBuyBtn.style.display = 'none';
           addonCancelBtn.style.display = 'block';
         } else {
           // Addon not purchased yet
           addonCard.classList.remove('active-plan');
           addonBadge.className = '';
           addonBadge.textContent = '';
-          addonBuyBtn.style.display    = 'block';
+          addonBuyBtn.style.display = 'block';
           addonCancelBtn.style.display = 'none';
         }
       } else {
@@ -838,13 +889,14 @@
     }
 
     // ============================================================
-    // MODAL CLOSE — Close on overlay click as well
+    // MODAL CLOSE — Close on overlay click as welll
     // ============================================================
-    document.getElementById('plansModal').addEventListener('click', function(e) {
+    document.getElementById('plansModal').addEventListener('click', function (e) {
       // Only close when clicking on the overlay itself, not inside the modal
       if (e.target === this) closePlansModal();
     });
   </script>
 
 </body>
+
 </html>
