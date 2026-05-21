@@ -761,7 +761,8 @@
           .from('users')
           .update({
             plan: 'premium',
-            plan_expires_at: expiryDate.toISOString()
+            plan_expires_at: expiryDate.toISOString(),
+            premium_start: new Date().toISOString()
           })
           .eq('id', currentUser.id);
 
@@ -770,6 +771,7 @@
         // Update local profile — no need to reload the page
         userProfile.plan = 'premium';
         userProfile.plan_expires_at = expiryDate.toISOString();
+        userProfile.premium_start = new Date().toISOString();
 
         showModalMsg('Premium activated! Enjoy for 30 days.', 'success');
         updateModalUI(); // Refresh modal
