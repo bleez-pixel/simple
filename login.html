@@ -10,6 +10,8 @@
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
     rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Shared Supabase config — `sb` client is available globally after this -->
+  <script src="supabase.js"></script>
 
   <style>
     :root {
@@ -244,17 +246,9 @@
 
   <script>
     // ============================================================
-    // SUPABASE SETUP — Use the same URL and Key as signup.html
-    // ============================================================
-    const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA';
-
-    const { createClient } = supabase;
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ============================================================
     // CHECK ON PAGE LOAD — If already logged in, redirect directly
     // to index.html, no need to log in again.
+    // (sb client comes from supabase.js)
     // ============================================================
     window.addEventListener('load', async () => {
       const { data } = await sb.auth.getSession();
@@ -292,16 +286,12 @@
 
         if (error) throw error;
 
-        // STEP 2: Get JWT Token and save it in localStorage
-        // This token is sent to Botpress so it can identify the user
-        const token = data.session.access_token;
-        localStorage.setItem('sb_token', token);
-
-        // STEP 3: Save user's plan in localStorage
+        // STEP 2: Save user's plan in localStorage
+        // (Supabase already manages the session internally — no need to save the token manually)
         // Used in index.html to control plans and display details
         const { data: userData } = await sb
           .from('users')
-          .select('name, plan, status, addon_messages')
+          .select('name, plan, status, premium_start')
           .eq('id', data.user.id)
           .single();
 

@@ -10,6 +10,8 @@
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
     rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Shared Supabase config — `sb` client is available globally after this -->
+  <script src="supabase.js"></script>
 
   <style>
     :root {
@@ -556,16 +558,8 @@
 
   <script>
     // ============================================================
-    // SUPABASE SETUPnow is going on
-    // ============================================================
-    const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA';
-
-    const { createClient } = supabase;
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ============================================================
     // GLOBAL STATE — stores information of the current user
+    // (sb client comes from supabase.js — no config needed here)
     // ============================================================
     let currentUser = null; // Supabase auth user
     let userProfile = null; // Data from our users table
@@ -579,8 +573,8 @@
 
       if (!sessionData.session) {
         // ---- USER NOT LOGGED IN ----
-        // Hide bot bubble — only logged-in users can use the bot
-        hideBotBubble();
+        // Provide empty token to the bot so it knows the user is not authenticated (shows Unauthorized)
+        initBotWithToken('');
         // Show login/signup prompt
         document.getElementById('authPrompt').style.display = 'flex';
 
@@ -617,18 +611,44 @@
       localStorage.setItem('sb_user', JSON.stringify(data));
     }
 
-    // ============================================================
-    // BOT INITIALIZE — Inform Botpress of user identity with token
-    // ============================================================
     function initBotWithToken(token) {
-      // Send user data when Botpress is ready
-      window.botpress?.on('ready', () => {
-        window.botpress.updateUser({
-          userData: {
-            token: token  // This JWT token will be passed to the Botpress Execute Code node
-          }
-        });
+      // Store token globally so listeners can access it
+      window._pendingBotToken = token;
+
+      // --- Strategy 1: Register event listeners FIRST ---
+      window.botpress?.on('webchat:initialized', () => {
+        if (typeof window._pendingBotToken !== 'undefined') {
+          window.botpress.updateUser({ data: { token: window._pendingBotToken } });
+          console.log('[Bot] Token sent via webchat:initialized event');
+        }
       });
+
+      window.botpress?.on('webchat:ready', () => {
+        if (typeof window._pendingBotToken !== 'undefined') {
+          window.botpress.updateUser({ data: { token: window._pendingBotToken } });
+          console.log('[Bot] Token sent via webchat:ready event');
+        }
+      });
+
+      // --- Strategy 2: Polling — keep retrying every 300ms for 15 seconds ---
+      let attempts = 0;
+      const maxAttempts = 50; // 50 x 300ms = 15 seconds
+
+      const interval = setInterval(() => {
+        attempts++;
+
+        if (window.botpress && typeof window.botpress.updateUser === 'function') {
+          window.botpress.updateUser({ data: { token: window._pendingBotToken } });
+          console.log('[Bot] Token sent via polling after', attempts * 300, 'ms');
+          clearInterval(interval); // Stop polling — token sent
+          return;
+        }
+
+        if (attempts >= maxAttempts) {
+          clearInterval(interval); // Give up after 15 seconds
+          console.warn('[Bot] Failed to send token — Botpress not ready after 15s');
+        }
+      }, 300);
     }
 
     // ============================================================
@@ -647,10 +667,16 @@
       document.head.appendChild(style);
     }
 
-    // ============================================================
-    // LOGOUT
-    // ============================================================
     async function handleLogout() {
+      // Pehle Botpress ka token clear karo
+      if (window.botpress && typeof window.botpress.updateUser === 'function') {
+        window.botpress.updateUser({
+          data: {
+            token: ''  // ← Token empty karo
+          }
+        });
+      }
+
       await sb.auth.signOut();
       localStorage.removeItem('sb_token');
       localStorage.removeItem('sb_user');
@@ -680,7 +706,7 @@
       if (!userProfile) return;
 
       const isPremium = userProfile.plan === 'premium';
-      const hasAddon = userProfile.addon_messages > 0;
+      const hasAddon = false;
 
       // --- Premium Card Update ---
       const premiumBadge = document.getElementById('premiumBadge');
@@ -710,7 +736,7 @@
       const addonBuyBtn = document.getElementById('addonBuyBtn');
       const addonCancelBtn = document.getElementById('addonCancelBtn');
 
-      if (isPremium) {
+      if (false) { // Hide addon card since addon columns are not used
         addonCard.style.display = 'block'; // Premium user — show card
 
         if (hasAddon) {
@@ -752,16 +778,11 @@
       btn.textContent = 'Activating...';
 
       try {
-        // Plan expires in 30 days
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 30);
-
         // Update in Supabase
         const { error } = await sb
           .from('users')
           .update({
             plan: 'premium',
-            plan_expires_at: expiryDate.toISOString(),
             premium_start: new Date().toISOString()
           })
           .eq('id', currentUser.id);
@@ -770,10 +791,9 @@
 
         // Update local profile — no need to reload the page
         userProfile.plan = 'premium';
-        userProfile.plan_expires_at = expiryDate.toISOString();
         userProfile.premium_start = new Date().toISOString();
 
-        showModalMsg('Premium activated! Enjoy for 30 days.', 'success');
+        showModalMsg('Premium activated!', 'success');
         updateModalUI(); // Refresh modal
 
       } catch (err) {
@@ -797,10 +817,7 @@
           .from('users')
           .update({
             plan: 'free',
-            plan_expires_at: null,
-            // Reset addon as well — addon does not work without premium
-            addon_messages: 0,
-            addon_expires_at: null
+            premium_start: null
           })
           .eq('id', currentUser.id);
 
@@ -808,9 +825,7 @@
 
         // Local update
         userProfile.plan = 'free';
-        userProfile.plan_expires_at = null;
-        userProfile.addon_messages = 0;
-        userProfile.addon_expires_at = null;
+        userProfile.premium_start = null;
 
         showModalMsg('Plan cancelled. Downgraded back to the Free plan.', 'success');
         updateModalUI();

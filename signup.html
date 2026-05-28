@@ -10,6 +10,8 @@
 
   <!-- Supabase SDK — Loaded from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Shared Supabase config — `sb` client is available globally after this -->
+  <script src="supabase.js"></script>
 
   <style>
     /* ===== CSS Variables — Color theme of the website ===== */
@@ -241,19 +243,8 @@
 
   <script>
     // ============================================================
-    // SUPABASE SETUP
-    // Enter your Project URL and Anon Key here
-    // Can be found in Supabase Dashboard → Settings → API
-    // ============================================================
-    const SUPABASE_URL = 'https://xvqiwsvvvbcevcelxgtf.supabase.co';       // ← Replace this
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cWl3c3Z2dmJjZXZjZWx4Z3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTQzNTcsImV4cCI6MjA5NDgzMDM1N30.PCMNOeF3u6IMOg1l26vfViHACRyhPeCHndyZLdhcPTA'; // ← Replace this
-
-    // Create Supabase client — we will make all calls using this
-    const { createClient } = supabase;
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ============================================================
     // FUNCTION TO DISPLAY MESSAGES
+    // (sb client comes from supabase.js — no config needed here)
     // type = 'error' or 'success'
     // ============================================================
     function showMsg(text, type) {
